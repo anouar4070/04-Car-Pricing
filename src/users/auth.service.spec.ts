@@ -47,3 +47,11 @@ describe('AuthService', () => {
     await expect(service.signup('asdf@asdf.com', 'asdf')).rejects.toThrow();
   });
 });
+
+/**
+ 👉 In summary:
+
+rejects = "wait for the Promise to fail".
+
+toThrow = "and make sure the failure is an exception (optionally with a specific message or type)".
+ */
