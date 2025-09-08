@@ -46,6 +46,12 @@ describe('AuthService', () => {
 
     await expect(service.signup('asdf@asdf.com', 'asdf')).rejects.toThrow();
   });
+
+  it('throws of signin is called with an unused email', async () => {
+    await expect(
+      service.signin('asdflkj@asdflkj.com', 'passdflkj'),
+    ).rejects.toThrow();
+  });
 });
 
 /**
