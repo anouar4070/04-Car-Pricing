@@ -45,20 +45,23 @@ describe('Authentication System (e2e)', () => {
   });
 
   it('signup as a new user then get the currently logged in user', async () => {
-    const email = 'asdf@asdf.com';
+    const testEmail = 'user1@test.com';
+    const testPassword = 'password123';
 
-    const res = await request(app.getHttpServer())
+    // Signup
+    const resSignup = await request(app.getHttpServer())
       .post('/auth/signup')
-      .send({ email, password: 'asdf' })
+      .send({ email: testEmail, password: testPassword })
       .expect(201);
 
-    const cookie = res.get('Set-Cookie');
+    const cookie = resSignup.get('Set-Cookie');
 
-    const { body } = await request(app.getHttpServer())
+    // Get currently logged-in user
+    const resWhoAmI = await request(app.getHttpServer())
       .get('/auth/whoami')
       .set('Cookie', cookie)
       .expect(200);
 
-    expect(body.email).toEqual(email);
+    expect(resWhoAmI.body.email).toEqual(testEmail);
   });
 });
