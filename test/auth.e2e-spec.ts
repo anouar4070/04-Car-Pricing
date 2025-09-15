@@ -3,10 +3,10 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from './../src/app.module';
 
-describe('Authentication System', () => {
+describe('Authentication System (e2e)', () => {
   let app: INestApplication;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -15,16 +15,31 @@ describe('Authentication System', () => {
     await app.init();
   });
 
-  it('handles a signup request', () => {
-    const email = 'asdlkjq1234@akl.com';
-    return request(app.getHttpServer())
+  afterAll(async () => {
+    await app.close(); // 👈 closes DB + Nest context
+  });
+
+  it('handles a signup request', async () => {
+    const testEmail = 'signup1@test.com';
+
+    const res = await request(app.getHttpServer())
       .post('/auth/signup')
-      .send({ email, password: 'alskdfjl' })
-      .expect(201)
-      .then((res) => {
-        const { id, email } = res.body;
-        expect(id).toBeDefined();
-        expect(email).toEqual(email);
-      });
+      .send({ email: testEmail, password: 'password123' })
+      .expect(201);
+
+    expect(res.body.id).toBeDefined();
+    expect(res.body.email).toEqual(testEmail);
+  });
+
+  it('handles another signup request', async () => {
+    const testEmail = 'signup2@test.com';
+
+    const res = await request(app.getHttpServer())
+      .post('/auth/signup')
+      .send({ email: testEmail, password: 'password123' })
+      .expect(201);
+
+    expect(res.body.id).toBeDefined();
+    expect(res.body.email).toEqual(testEmail);
   });
 });
