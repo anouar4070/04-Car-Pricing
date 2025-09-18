@@ -1,6 +1,8 @@
 import { User } from '../users/user.entity';
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
+//console.log(User); //undefined
+
 @Entity()
 export class Report {
   @PrimaryGeneratedColumn()

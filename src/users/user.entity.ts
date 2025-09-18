@@ -10,6 +10,8 @@ import {
   OneToMany,
 } from 'typeorm';
 
+//console.log(Report); // [class Report]
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
