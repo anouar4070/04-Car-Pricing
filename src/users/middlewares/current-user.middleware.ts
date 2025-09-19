@@ -1,6 +1,14 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { UsersService } from '../users.service';
+import { User } from '../user.entity';
+
+// Use ES2015 module augmentation instead of namespace
+declare module 'express-serve-static-core' {
+  interface Request {
+    currentUser?: User | null;
+  }
+}
 
 @Injectable()
 export class CurrentUserMiddleware implements NestMiddleware {
@@ -11,8 +19,9 @@ export class CurrentUserMiddleware implements NestMiddleware {
 
     if (userId) {
       const user = await this.usersService.findOne(userId);
-      // @ts-ignore
       req.currentUser = user;
+    } else {
+      req.currentUser = null;
     }
 
     next();
